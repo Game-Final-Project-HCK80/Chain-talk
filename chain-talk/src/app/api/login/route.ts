@@ -2,8 +2,8 @@ import { comparePassword } from "@/app/helpers/bcrypt";
 import { errHandler } from "@/app/helpers/errHandler";
 import { signToken } from "@/app/helpers/jwt";
 import { cookies } from "next/headers";
-import { CustomError } from "../../../../types";
 import UserModel from "../../../db/model/usermodel";
+import { CustomError } from "@/types";
 
 export async function POST(req: Request) {
   try {
