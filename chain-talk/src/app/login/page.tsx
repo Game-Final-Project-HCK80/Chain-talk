@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+// import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 export const dynamic = "force-dynamic";
 
 export default function LoginPage() {
+    // const router = useRouter()
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -41,6 +43,7 @@ export default function LoginPage() {
 
             console.log(responseData);
             window.location.href = "/";
+            // router.push('/')
         } catch (err) {
             toast((err as Error).message);
         } finally {
