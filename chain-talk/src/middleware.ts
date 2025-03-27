@@ -12,7 +12,10 @@ export async function middleware(request: NextRequest) {
 
     console.log(auth, "tokennnn masuk/belum");
 
-    if (request.nextUrl.pathname.startsWith("/create-room")) {
+    if (request.nextUrl.pathname.startsWith("/create-room") ||
+        request.nextUrl.pathname.startsWith("/profile")||
+        request.nextUrl.pathname.startsWith("/leaderboard")||
+        request.nextUrl.pathname.startsWith("/lobby")) {
         try {
             if (!auth) {
                 throw { message: "please login first", status: 401 };
@@ -42,5 +45,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/api/create-room/:path*","/create-room"],
+    matcher: ["/create-room/:path*",
+        "/profile/:path*",
+        "/leaderboard/:path*",
+        "/lobby/:path*"
+    ],
 };
