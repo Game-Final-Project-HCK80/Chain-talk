@@ -12,9 +12,8 @@ export async function middleware(request: NextRequest) {
 
     console.log(auth, "tokennnn masuk/belum");
 
-    if (request.nextUrl.pathname.startsWith("/create-room") ||
-        request.nextUrl.pathname.startsWith("/profile")||
-        request.nextUrl.pathname.startsWith("/leaderboard")||
+    if (request.nextUrl.pathname.startsWith("/play-game") ||
+        request.nextUrl.pathname.startsWith("/api/profile")||
         request.nextUrl.pathname.startsWith("/lobby")) {
         try {
             if (!auth) {
@@ -45,9 +44,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/create-room/:path*",
-        "/profile/:path*",
-        "/leaderboard/:path*",
+    matcher: ["/play-game/:path*",
+        "/api/profile/:path*",
         "/lobby/:path*"
     ],
 };
+ 

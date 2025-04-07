@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    const user = await UserModel.findByEmailOrUsername(email);
+    const user = await UserModel.findByEmail(email);
     if (!user) throw { message: "invalid email/password", status: 401 };
 
     const validPassword = comparePassword(password, user.password);
