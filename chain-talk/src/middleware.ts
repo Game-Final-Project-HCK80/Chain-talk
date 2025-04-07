@@ -12,9 +12,9 @@ export async function middleware(request: NextRequest) {
 
     console.log(auth, "tokennnn masuk/belum");
 
-    if (request.nextUrl.pathname.startsWith("/play-game") ||
+    if (request.nextUrl.pathname.startsWith("/api/play-game") ||
         request.nextUrl.pathname.startsWith("/api/profile")||
-        request.nextUrl.pathname.startsWith("/lobby")) {
+        request.nextUrl.pathname.startsWith("/api/lobby")) {
         try {
             if (!auth) {
                 throw { message: "please login first", status: 401 };
@@ -44,9 +44,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/play-game/:path*",
+    matcher: ["/api/play-game/:path*",
         "/api/profile/:path*",
-        "/lobby/:path*"
+        "/api/lobby/:path*"
     ],
 };
  

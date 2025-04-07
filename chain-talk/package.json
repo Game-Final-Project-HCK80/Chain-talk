@@ -15,6 +15,7 @@
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
     "daisyui": "^5.0.9",
+    "framer-motion": "^12.6.3",
     "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
