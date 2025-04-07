@@ -12,11 +12,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@daily-co/daily-js": "^0.77.0",
+    "@daily-co/daily-react": "^0.22.0",
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
     "daisyui": "^5.0.9",
     "framer-motion": "^12.6.3",
     "jose": "^6.0.10",
+    "jotai": "^2.12.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
     "next": "15.2.4",
