@@ -10,7 +10,7 @@ export default function Profile() {
     useEffect(() => {
         async function fetchProfile() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/profile`, {
+                const res = await fetch(`/api/profile`, {
                     credentials: "include", // penting: biar cookies dibawa
                 });
 
