@@ -40,4 +40,13 @@ export class RoomModel {
         return "success";
         
     }
+
+    static async getAll() {
+        const rooms = await this.collection().find({}).toArray();
+
+        return rooms.map((room) => {
+            const { ...rest } = room;
+            return rest;
+        });
+    }
 }

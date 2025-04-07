@@ -3,7 +3,6 @@ export type CustomError = {
     status: number;
 }
 
-
 export type UserType = {
     email: string;
     username: string;
@@ -13,5 +12,3 @@ export type UserType = {
     createdAt: Date;
     updatedAt: Date;
   };
-
-
