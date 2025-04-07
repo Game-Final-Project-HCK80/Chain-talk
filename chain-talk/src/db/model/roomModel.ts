@@ -1,11 +1,20 @@
 import { database } from "../config/config";
 
+export type Player = {
+    id: string;
+    name: string;
+    score: number;
+    isHost: boolean;
+}
+
 export type RoomType = {
     id?: string;
     codeRoom: string;
     hostId: string;
     roomUrl: string;
     status: string;
+    players: Player[];
+    answer: string[];
 };
 
 export class RoomModel {
