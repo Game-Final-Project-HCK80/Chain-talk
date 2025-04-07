@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-// import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 export const dynamic = "force-dynamic";
 
 export default function LoginPage() {
-    // const router = useRouter()
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -41,15 +39,21 @@ export default function LoginPage() {
                 throw responseData;
             }
 
-            console.log(responseData);
             window.location.href = "/";
-            // router.push('/')
         } catch (err) {
             toast((err as Error).message);
         } finally {
             setIsLoading(false);
         }
     };
+
+    // === Hydration fix ===
+    const [hasMounted, setHasMounted] = useState(false);
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+    if (!hasMounted) return null;
+    // =====================
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-purple-500 to-pink-500 px-4">
@@ -84,11 +88,14 @@ export default function LoginPage() {
                         </button>
                     </form>
                 </div>
+
                 {/* Bagian Sign Up */}
                 <div className="w-full md:w-1/2 bg-gradient-to-br from-pink-500 to-purple-500 text-white flex flex-col justify-center items-center p-8">
                     <h2 className="text-2xl font-bold mb-4">New Here?</h2>
                     <p className="text-center mb-4">Join the Chain-Talk community and start playing now!</p>
-                    <Link href={`/register`} className="border border-white px-6 py-3 rounded text-lg transition duration-300 hover:bg-white hover:text-purple-600">SIGN UP</Link>
+                    <Link href={`/register`} className="border border-white px-6 py-3 rounded text-lg transition duration-300 hover:bg-white hover:text-purple-600">
+                        SIGN UP
+                    </Link>
                 </div>
             </div>
         </div>

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { UserType } from "@/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Image from "next/image";
 
 export default function Home() {
   const [profile, setProfile] = useState<UserType | null>(null);
@@ -39,14 +38,16 @@ export default function Home() {
     fetchProfile();
   }, []);
 
-  const getLevel = (points: number) =>
-    points >= 0 && points < 10 ? 1 :
-      points >= 10 && points < 20 ? 2 :
-        points >= 20 && points < 30 ? 3 :
-          points >= 30 && points < 40 ? 4 :
-            points >= 40 && points < 50 ? 5 : 6;
+  const getImageByPoint = (points: number) => {
+    if (points >= 0 && points < 10) return "/bronze.png";
+    if (points >= 10 && points < 20) return "/silver.png";
+    if (points >= 20 && points < 30) return "/gold.png";
+    if (points >= 30 && points < 40) return "/platinum.png";
+    if (points >= 40 && points < 50) return "/diamond.png";
+    return "/master.png";
+  };
 
-  const level = getLevel(point);
+  const badgeImage = getImageByPoint(point);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 text-white flex flex-col items-center justify-center px-4">
@@ -60,20 +61,13 @@ export default function Home() {
       </motion.p>
 
       {profile && (
-        <div className="mt-10 flex items-center gap-3">
-          {level === 1 ? (
-            <LevelCard level="1" color="text-red-300" image="/bronze.png" />
-          ) : level === 2 ? (
-            <LevelCard level="2" color="text-green-300" image="/silver.png" />
-          ) : level === 3 ? (
-            <LevelCard level="3" color="text-yellow-300" image="/gold.png" />
-          ) : level === 4 ? (
-            <LevelCard level="4" color="text-red-300" image="/platinum.png" />
-          ) : level === 5 ? (
-            <LevelCard level="5" color="text-red-300" image="/diamond.png" />
-          ) : (
-            <LevelCard level="6" color="text-red-300" image="/master.png" />
-          )}
+        <div className="flex flex-col items-center gap-4 mt-10">
+          <img
+            src={badgeImage}
+            alt="User Rank Badge"
+            className="w-60 h-60 object-contain rounded-xl shadow-2xl"
+          />
+          <p className="text-2xl font-bold">Points: {point}</p>
         </div>
       )}
 
@@ -93,14 +87,5 @@ export default function Home() {
         </motion.button>
       </div>
     </main>
-  );
-}
-
-function LevelCard({ level, color, image }: { level: string, color: string, image: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <span className={`${color}`}>🌟 Level {level}</span>
-      <Image src={image} alt={`Level ${level}`} width={100} height={100} />
-    </div>
   );
 }
