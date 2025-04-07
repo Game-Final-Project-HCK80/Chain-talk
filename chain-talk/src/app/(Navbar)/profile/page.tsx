@@ -35,8 +35,8 @@ export default function Profile() {
 
             {profile ? (
                 <div className="bg-white p-6 rounded-xl shadow-md max-w-xl mx-auto">
-                    <p><strong>Nama:</strong> {profile.username}</p>
-                    <p><strong>Email:</strong> {profile.email}</p>
+                    <p className="text-black"><strong>Nama:</strong> {profile.username}</p>
+                    <p className="text-black"><strong>Email:</strong> {profile.email}</p>
                 </div>
             ) : (
                 <p className="text-center text-gray-500">Loading profile...</p>

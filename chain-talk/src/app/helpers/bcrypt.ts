@@ -8,4 +8,3 @@ export function hashPassword (password: string){
 export function comparePassword (password: string, hashedPassword: string){
     return bcrypt.compareSync(password, hashedPassword);
 }
-
