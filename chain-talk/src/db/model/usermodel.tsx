@@ -59,7 +59,7 @@ class UserModel {
         const users = await this.collection().find({}).toArray();
 
         return users.map((user) => {
-            const { password, ...rest } = user;
+            const { ...rest } = user;
             return rest;
         });
     }
