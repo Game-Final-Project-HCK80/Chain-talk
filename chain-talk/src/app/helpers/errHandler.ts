@@ -1,4 +1,4 @@
-import { CustomError } from "../../../types"
+import { CustomError } from "@/types";
 import { ZodError } from "zod";
 
 export const errHandler = (err: CustomError | ZodError) => {

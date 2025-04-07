@@ -1,6 +1,6 @@
 
 import UserModel from "@/db/model/usermodel";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const userId = req.headers.get("x-user-id") as string;
@@ -14,6 +14,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json(user); // return seluruh user data
   } catch (err) {
-    return NextResponse.json({ message: "Terjadi kesalahan server" }, { status: 500 });
+    return NextResponse.json({ message: "Terjadi kesalahan server", err }, { status: 500 });
   }
 }
