@@ -1,6 +1,7 @@
 import { errHandler } from "@/app/helpers/errHandler";
 import UserModel from "../../../db/model/usermodel";
-import { CustomError } from "../../../../types";
+import { CustomError } from "@/types";
+// import { CustomError } from "../../../../types";
 
 
 

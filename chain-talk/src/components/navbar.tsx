@@ -30,7 +30,7 @@ export default function Navbar() {
                                 {/* Desktop Menu */}
                                 <div className="hidden md:flex space-x-8 text-white">
                                     <Link href="/" className={`${pathname === '/' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Home</Link>
-                                    <Link href="/create-room" className={`${pathname === '/create-room' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Create Room</Link>
+                                    <Link href="/play-game" className={`${pathname === '/play-game' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Play Game</Link>
                                     <Link href="/profile" className={`${pathname === '/profile' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Profile</Link>
                                     <Link href="/leaderboard" className={`${pathname === '/leaderboard' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Leaderboard</Link>
                                     <Link href="/lobby" className={`${pathname === '/lobby' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Lobby</Link>
@@ -49,7 +49,7 @@ export default function Navbar() {
                             {isOpen && (
                                 <div className="md:hidden flex flex-col space-y-4 mt-4 text-white">
                                     <Link href="/" className={`${pathname === '/' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Home</Link>
-                                    <Link href="/create-room" className={`${pathname === '/create-room' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Create Room</Link>
+                                    <Link href="/play-game" className={`${pathname === '/play-game' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Play Game</Link>
                                     <Link href="/profile" className={`${pathname === '/profile' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Profile</Link>
                                     <Link href="/leaderboard" className={`${pathname === '/leaderboard' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Leaderboard</Link>
                                     <Link href="/lobby" className={`${pathname === '/lobby' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Lobby</Link>
