@@ -78,22 +78,31 @@ class UserModel {
     }
 
     static async updateProfile(_id: string, updateData: Partial<NewUser>) {
-        await this.collection().updateOne(
+        const updatedUser = await this.collection().findOneAndUpdate(
             { _id: new ObjectId(_id) },
-            { $set: { ...updateData, updatedAt: new Date() } }
+            {
+                $set: {
+                    ...updateData,
+                    updatedAt: new Date()
+                }
+            },
+            {
+                returnDocument: "after" // mirip dengan { new: true } di Mongoose
+            }
         );
-
-        const updatedUser = await this.collection().findOne({ _id: new ObjectId(_id) });
-
+    
         if (!updatedUser) {
             throw { message: "User not found", status: 404 };
         }
-
-        return updatedUser;
+    
+        return updatedUser
     }
 }
 
 export default UserModel;
+
+
+
 
 
 
