@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { UserType } from "@/types";
 import Link from "next/link";
@@ -125,117 +126,138 @@ export default function Profile() {
     const nextPoints = 10 - (point % 10);
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-[#6e00b3] via-[#3e0066] to-[#6e00b3] text-white flex items-center justify-center px-4 py-10">
+        <main className="min-h-screen bg-gradient-to-br from-[#6e00b3] via-[#3e0066] to-[#6e00b3] text-white flex items-center justify-center px-4 py-10 relative">
             {!loading && profile && (
-                <div className="w-full max-w-3xl h-[90vh] bg-purple bg-opacity-40 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500 flex flex-col justify-between items-center gap-6">
-                    {/* Title */}
-                    <h2 className="text-3xl font-bold text-center flex items-center justify-center gap-2">
-                        <img src="/crown-icon.png" className="w-7 h-7" alt="Crown" />
-                        Your Profile
-                    </h2>
+                <>
+                    <div className="w-full max-w-3xl h-[90vh] bg-purple bg-opacity-40 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500 flex flex-col justify-between items-center gap-6">
+                        {/* Title */}
+                        <h2 className="text-3xl font-bold text-center flex items-center justify-center gap-2">
+                            <img src="/crown-icon.png" className="w-7 h-7" alt="Crown" />
+                            Your Profile
+                        </h2>
 
-                    {/* Profile middle content: picture + username + point */}
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-10">
-                        {/* Avatar */}
-                        <div className="relative">
-                            <img
-                                src={editMode ? tempPicture : (profile.picture || "/default-avatar.png")}
-                                alt="User Avatar"
-                                className={`w-32 h-32 rounded-full border-4 ${getBorderColorByPoint(point)} shadow-lg object-cover transition hover:scale-105`}
-                            />
-                            {editMode && (
-                                <>
-                                    <button
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="absolute bottom-0 right-0 bg-yellow-400 p-1 rounded-full hover:scale-110 transition"
-                                    >
-                                        <img src="/pencil-icon.png" alt="Edit" className="w-5 h-5" />
-                                    </button>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        ref={fileInputRef}
-                                        className="hidden"
-                                        onChange={handlePictureChange}
-                                    />
-                                </>
-                            )}
-                        </div>
-
-                        {/* Username and Points */}
-                        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4">
-                            {editMode ? (
-                                <input
-                                    type="text"
-                                    value={tempUsername}
-                                    onChange={(e) => setTempUsername(e.target.value)}
-                                    className="w-full max-w-xs p-2 bg-transparent border-b-2 border-yellow-400 text-white text-2xl font-bold placeholder:text-gray-300"
-                                    placeholder="Username"
+                        {/* Profile */}
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+                            <div className="relative">
+                                <img
+                                    src={profile.picture || "/default-avatar.png"}
+                                    alt="User Avatar"
+                                    className={`w-32 h-32 rounded-full border-4 ${getBorderColorByPoint(point)} shadow-lg object-cover`}
                                 />
-                            ) : (
-                                <h1 className="text-3xl font-bold text-yellow-300">{profile.username}</h1>
-                            )}
+                            </div>
 
-                            <div className="w-full max-w-xs">
-                                <p className="text-lg font-semibold">
-                                    Points: <span className="text-yellow-400">{point}</span>
-                                </p>
-                                <div className="mt-2">
-                                    <div className="w-full bg-gray-700 rounded-full h-2">
-                                        <div
-                                            className="bg-yellow-400 h-2 rounded-full"
-                                            style={{ width: `${Math.min((point % 10) * 10, 100)}%` }}
-                                        />
-                                    </div>
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        {nextPoints} points to next rank
+                            <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4">
+                                <h1 className="text-3xl font-bold text-yellow-300">{profile.username}</h1>
+                                <div className="w-full max-w-xs">
+                                    <p className="text-lg font-semibold">
+                                        Points: <span className="text-yellow-400">{point}</span>
                                     </p>
+                                    <div className="mt-2">
+                                        <div className="w-full bg-gray-700 rounded-full h-2">
+                                            <div
+                                                className="bg-yellow-400 h-2 rounded-full"
+                                                style={{ width: `${Math.min((point % 10) * 10, 100)}%` }}
+                                            />
+                                        </div>
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            {nextPoints} points to next rank
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* BUTTONS */}
-                    <div className="flex justify-center w-full gap-4 mt-4">
-                        {editMode ? (
-                            <>
-                                <button
-                                    onClick={handleSave}
-                                    disabled={saving}
-                                    className="bg-yellow-400 text-purple-900 font-bold px-5 py-2 rounded-xl hover:bg-yellow-300 transition"
-                                >
-                                    {saving ? "Saving..." : "Save"}
-                                </button>
-                                <button
-                                    onClick={handleCancel}
-                                    disabled={saving}
-                                    className="bg-gray-300 text-black font-bold px-5 py-2 rounded-xl hover:bg-gray-200 transition"
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        ) : (
+                        {/* Buttons */}
+                        <div className="flex justify-center w-full gap-4 mt-4">
                             <button
                                 onClick={() => setEditMode(true)}
                                 className="bg-yellow-400 text-purple-900 font-bold px-5 py-2 rounded-xl hover:bg-yellow-300 transition"
                             >
                                 Edit Profile
                             </button>
-                        )}
+                        </div>
+
+                        <div className="flex flex-col items-center gap-2 mt-8">
+                            <Link href="/info-rank">
+                                <img
+                                    src={badgeImage}
+                                    alt="User Rank"
+                                    className="w-40 h-40 object-contain hover:scale-105 transition"
+                                />
+                            </Link>
+                            <p className="text-sm text-gray-300 text-center">Click badge for rank info</p>
+                        </div>
                     </div>
 
-                    {/* RANK BADGE */}
-                    <div className="flex flex-col items-center gap-2 mt-8">
-                        <Link href="/info-rank">
-                            <img
-                                src={badgeImage}
-                                alt="User Rank"
-                                className="w-40 h-40 object-contain hover:scale-105 transition"
-                            />
-                        </Link>
-                        <p className="text-sm text-gray-300 text-center">Click badge for rank info</p>
-                    </div>
-                </div>
+                    {/* Modal */}
+                    <AnimatePresence>
+                        {editMode && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-purple-900/80 flex items-center justify-center z-50"
+                            >
+                                <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    className="bg-white text-black p-8 rounded-2xl shadow-2xl w-[90%] max-w-md space-y-6"
+                                >
+                                    <h3 className="text-xl font-bold text-purple-700 text-center">Edit Profile</h3>
+
+                                    <div className="flex flex-col items-center gap-4">
+                                        <div className="relative">
+                                            <img
+                                                src={tempPicture}
+                                                alt="Temp Avatar"
+                                                className="w-28 h-28 rounded-full object-cover border-4 border-purple-300"
+                                            />
+                                            <button
+                                                onClick={() => fileInputRef.current?.click()}
+                                                className="absolute bottom-0 right-0 bg-yellow-400 p-1 rounded-full"
+                                            >
+                                                <img src="/pencil-icon.png" alt="Edit" className="w-5 h-5" />
+                                            </button>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                ref={fileInputRef}
+                                                className="hidden"
+                                                onChange={handlePictureChange}
+                                            />
+                                        </div>
+
+                                        <input
+                                            type="text"
+                                            value={tempUsername}
+                                            onChange={(e) => setTempUsername(e.target.value)}
+                                            className="w-full p-2 border-b-2 border-purple-400 focus:outline-none text-lg font-semibold"
+                                            placeholder="Enter new username"
+                                        />
+                                    </div>
+
+                                    <div className="flex justify-center gap-4 mt-6">
+                                        <button
+                                            onClick={handleSave}
+                                            disabled={saving}
+                                            className="bg-yellow-400 text-purple-900 font-bold px-5 py-2 rounded-xl hover:bg-yellow-300 transition"
+                                        >
+                                            {saving ? "Saving..." : "Save"}
+                                        </button>
+                                        <button
+                                            onClick={handleCancel}
+                                            className="bg-gray-300 text-black font-bold px-5 py-2 rounded-xl hover:bg-gray-200 transition"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </>
             )}
         </main>
     );
