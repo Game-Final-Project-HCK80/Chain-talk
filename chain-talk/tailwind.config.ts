@@ -55,6 +55,10 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        'wind-blow': {
+      '0%, 100%': { transform: 'rotate(-10deg) scaleX(1)' },
+      '50%': { transform: 'rotate(-10deg) scaleX(1.2)' },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -64,9 +68,16 @@ const config: Config = {
           to: { height: "0" },
         },
       },
+      bubble: {
+        '0%': { opacity: 0, transform: 'translateY(0) scale(1)' },
+        '50%': { opacity: 0.4 },
+        '100%': { opacity: 0, transform: 'translateY(-20px) scale(1.3)' },
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'wind-blow': 'wind-blow 4s ease-in-out infinite',
+          bubble: 'bubble 3s ease-in-out infinite',
       },
     },
   },
