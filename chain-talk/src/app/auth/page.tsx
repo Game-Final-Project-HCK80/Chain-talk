@@ -11,7 +11,7 @@ export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login")
 
   return (
-    <div className="min-h-screen bg-[#ECF0F1] flex flex-col md:flex-row items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen bg-[#1E004A] flex flex-col md:flex-row items-center justify-center p-4 md:p-8">
       {/* Welcome Section */}
       <div className="w-full md:w-1/2 max-w-md md:max-w-lg p-6 md:p-10">
         <motion.div
@@ -20,14 +20,14 @@ export default function AuthPage() {
           transition={{ duration: 0.5 }}
           className="text-center md:text-left"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-[#34495E] mb-4">
-            Chain<span className="text-[#F1C40F]">Talk</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Chain<span className="text-[#FFD60A]">Talk</span>
           </h1>
-          <p className="text-lg text-[#34495E]/80 mb-6">
+          <p className="text-lg text-[#CCCCCC] mb-6">
             Connect, learn, and play with words in this multiplayer educational game!
           </p>
           <div className="hidden md:block">
-            <div className="relative w-full h-64 bg-[#34495E]/10 rounded-xl overflow-hidden">
+            <div className="relative w-full h-64 bg-[#2B0A54]/50 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(114,9,183,0.3)]">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="grid grid-cols-3 gap-3 p-4">
                   {["LEARN", "PLAY", "CHAT", "WORD", "GAME", "TEAM", "CHAIN", "BUILD", "SOLVE"].map((word, i) => (
@@ -36,7 +36,7 @@ export default function AuthPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.1, duration: 0.5 }}
-                      className="bg-[#34495E] text-[#ECF0F1] font-bold py-2 px-3 rounded-lg text-center"
+                      className="bg-[#3A0B73] text-white font-bold py-2 px-3 rounded-lg text-center shadow-md"
                     >
                       {word}
                     </motion.div>
@@ -54,15 +54,13 @@ export default function AuthPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-xl shadow-xl overflow-hidden"
+          className="bg-[#2B0A54] rounded-xl shadow-[0_0_30px_rgba(123,31,162,0.4)] overflow-hidden border border-[#7209B7]/30"
         >
           {/* Tabs */}
-          <div className="flex border-b border-[#ECF0F1]">
+          <div className="flex border-b border-[#7209B7]/30">
             <button
               onClick={() => setActiveTab("login")}
-              className={`flex-1 py-4 font-bold text-lg transition-colors duration-300 ${activeTab === "login"
-                ? "text-[#34495E] border-b-2 border-[#F1C40F]"
-                : "text-[#34495E]/50 hover:text-[#34495E]/70"
+              className={`flex-1 py-4 font-bold text-lg transition-colors duration-300 ${activeTab === "login" ? "text-[#FFD60A] border-b-2 border-[#FFD60A]" : "text-[#CCCCCC] hover:text-white"
                 }`}
             >
               Login
@@ -70,8 +68,8 @@ export default function AuthPage() {
             <button
               onClick={() => setActiveTab("register")}
               className={`flex-1 py-4 font-bold text-lg transition-colors duration-300 ${activeTab === "register"
-                ? "text-[#34495E] border-b-2 border-[#F1C40F]"
-                : "text-[#34495E]/50 hover:text-[#34495E]/70"
+                ? "text-[#FFD60A] border-b-2 border-[#FFD60A]"
+                : "text-[#CCCCCC] hover:text-white"
                 }`}
             >
               Register
@@ -144,12 +142,12 @@ function LoginForm() {
       className="space-y-6"
     >
       <div className="space-y-2">
-        <label htmlFor="email" className="block text-sm font-medium text-[#34495E]">
+        <label htmlFor="email" className="block text-sm font-medium text-white">
           Email
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-[#34495E]/50 z-50" />
+            <Mail className="h-5 w-5 text-[#CCCCCC]" />
           </div>
           <input
             onChange={handleChange}
@@ -157,7 +155,7 @@ function LoginForm() {
             name="email"
             type="email"
             id="email"
-            className="input input-bordered w-full pl-10 bg-[#ECF0F1] border-[#ECF0F1] focus:border-[#F1C40F] focus:ring-[#F1C40F] text-[#34495E]"
+            className="input input-bordered w-full pl-10 bg-[#3A0B73] border-[#7209B7] text-white focus:border-[#F72585] focus:ring-[#F72585] placeholder-[#CCCCCC]"
             placeholder="your@email.com"
             required
           />
@@ -166,19 +164,19 @@ function LoginForm() {
 
       <div className="space-y-2">
         <div className="flex justify-between">
-          <label htmlFor="password" className="block text-sm font-medium text-[#34495E]">
+          <label htmlFor="password" className="block text-sm font-medium text-white">
             Password
           </label>
           <Link
             href="/forgot-password"
-            className="text-sm font-medium text-[#F1C40F] hover:text-[#F1C40F]/80 transition-colors"
+            className="text-sm font-medium text-[#F72585] hover:text-[#F72585]/80 transition-colors"
           >
             Forgot Password?
           </Link>
         </div>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-[#34495E]/50 z-50" />
+            <Lock className="h-5 w-5 text-[#CCCCCC]" />
           </div>
           <input
             onChange={handleChange}
@@ -186,7 +184,7 @@ function LoginForm() {
             name="password"
             type="password"
             id="password"
-            className="input input-bordered w-full pl-10 bg-[#ECF0F1] border-[#ECF0F1] focus:border-[#F1C40F] focus:ring-[#F1C40F] text-[#34495E]"
+            className="input input-bordered w-full pl-10 bg-[#3A0B73] border-[#7209B7] text-white focus:border-[#F72585] focus:ring-[#F72585] placeholder-[#CCCCCC]"
             placeholder="••••••••"
             required
           />
@@ -195,7 +193,7 @@ function LoginForm() {
 
       <button
         type="submit"
-        className="btn w-full bg-[#F1C40F] hover:bg-[#F1C40F]/80 text-[#34495E] border-none font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center group"
+        className="btn w-full bg-gradient-to-r from-[#F72585] to-[#7209B7] hover:shadow-[0_0_15px_rgba(247,37,133,0.5)] text-white border-none font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center group shadow-md"
       >
         {isLoading ? "Loading..." : "Login"}
         <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -204,7 +202,7 @@ function LoginForm() {
   )
 }
 
-function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<"login" | "register">>}) {
+function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<"login" | "register">> }) {
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -212,7 +210,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
     confirmPassword: ""
   });
   const [loading, setIsLoading] = useState(false);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setFormData({
@@ -258,7 +256,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
         password: "",
         confirmPassword: ""
       });
-      
+
       setActiveTab("login");
 
     } catch (error) {
@@ -278,12 +276,12 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
       className="space-y-5"
     >
       <div className="space-y-2">
-        <label htmlFor="username" className="block text-sm font-medium text-[#34495E]">
+        <label htmlFor="username" className="block text-sm font-medium text-white">
           Username
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <User className="h-5 w-5 text-[#34495E]/50 z-50" />
+            <User className="h-5 w-5 text-[#CCCCCC]" />
           </div>
           <input
             onChange={handleChange}
@@ -291,7 +289,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
             name="username"
             type="text"
             id="username"
-            className="input input-bordered w-full pl-10 bg-[#ECF0F1] border-[#ECF0F1] focus:border-[#F1C40F] focus:ring-[#F1C40F] text-[#34495E]"
+            className="input input-bordered w-full pl-10 bg-[#3A0B73] border-[#7209B7] text-white focus:border-[#F72585] focus:ring-[#F72585] placeholder-[#CCCCCC]"
             placeholder="YourUsername"
             required
           />
@@ -299,12 +297,12 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="register-email" className="block text-sm font-medium text-[#34495E]">
+        <label htmlFor="register-email" className="block text-sm font-medium text-white">
           Email
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-[#34495E]/50 z-50" />
+            <Mail className="h-5 w-5 text-[#CCCCCC]" />
           </div>
           <input
             onChange={handleChange}
@@ -312,7 +310,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
             name="email"
             type="email"
             id="register-email"
-            className="input input-bordered w-full pl-10 bg-[#ECF0F1] border-[#ECF0F1] focus:border-[#F1C40F] focus:ring-[#F1C40F] text-[#34495E]"
+            className="input input-bordered w-full pl-10 bg-[#3A0B73] border-[#7209B7] text-white focus:border-[#F72585] focus:ring-[#F72585] placeholder-[#CCCCCC]"
             placeholder="your@email.com"
             required
           />
@@ -320,12 +318,12 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="register-password" className="block text-sm font-medium text-[#34495E]">
+        <label htmlFor="register-password" className="block text-sm font-medium text-white">
           Password
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-[#34495E]/50 z-50" />
+            <Lock className="h-5 w-5 text-[#CCCCCC]" />
           </div>
           <input
             onChange={handleChange}
@@ -333,7 +331,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
             name="password"
             type="password"
             id="register-password"
-            className="input input-bordered w-full pl-10 bg-[#ECF0F1] border-[#ECF0F1] focus:border-[#F1C40F] focus:ring-[#F1C40F] text-[#34495E]"
+            className="input input-bordered w-full pl-10 bg-[#3A0B73] border-[#7209B7] text-white focus:border-[#F72585] focus:ring-[#F72585] placeholder-[#CCCCCC]"
             placeholder="••••••••"
             required
           />
@@ -341,12 +339,12 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="confirm-password" className="block text-sm font-medium text-[#34495E]">
+        <label htmlFor="confirm-password" className="block text-sm font-medium text-white">
           Confirm Password
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-[#34495E]/50 z-50" />
+            <Lock className="h-5 w-5 text-[#CCCCCC]" />
           </div>
           <input
             onChange={handleChange}
@@ -354,7 +352,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
             name="confirmPassword"
             type="password"
             id="confirm-password"
-            className="input input-bordered w-full pl-10 bg-[#ECF0F1] border-[#ECF0F1] focus:border-[#F1C40F] focus:ring-[#F1C40F] text-[#34495E]"
+            className="input input-bordered w-full pl-10 bg-[#3A0B73] border-[#7209B7] text-white focus:border-[#F72585] focus:ring-[#F72585] placeholder-[#CCCCCC]"
             placeholder="••••••••"
             required
           />
@@ -363,7 +361,7 @@ function RegisterForm({ setActiveTab }: { setActiveTab: Dispatch<SetStateAction<
 
       <button
         type="submit"
-        className="btn w-full bg-[#F1C40F] hover:bg-[#F1C40F]/80 text-[#34495E] border-none font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center group"
+        className="btn w-full bg-gradient-to-r from-[#F72585] to-[#7209B7] hover:shadow-[0_0_15px_rgba(247,37,133,0.5)] text-white border-none font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center group shadow-md"
       >
         {loading ? "Registering..." : "Create Account"}
         <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
