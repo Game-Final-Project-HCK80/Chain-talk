@@ -34,6 +34,7 @@ export default function Navbar() {
                                     <Link href="/profile" className={`${pathname === '/profile' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Profile</Link>
                                     <Link href="/leaderboard" className={`${pathname === '/leaderboard' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Leaderboard</Link>
                                     <Link href="/lobby" className={`${pathname === '/lobby' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Lobby</Link>
+                                    <Link href="/info-rank" className={`${pathname === '/info-rank' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Rank Info</Link>
                                     {auth ? <ButtonLogout /> : <Link href="/login" className="hover:text-yellow-200">Login</Link>}
                                 </div>
                                 {/* Mobile Menu Button */}
@@ -53,6 +54,7 @@ export default function Navbar() {
                                     <Link href="/profile" className={`${pathname === '/profile' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Profile</Link>
                                     <Link href="/leaderboard" className={`${pathname === '/leaderboard' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Leaderboard</Link>
                                     <Link href="/lobby" className={`${pathname === '/lobby' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Lobby</Link>
+                                    <Link href="/info-rank" className={`${pathname === '/info-rank' ? 'text-yellow-300 font-bold' : 'hover:text-yellow-200'}`}>Rank Info</Link>
                                     {auth ? <ButtonLogout /> : <Link href="/login" className="hover:text-yellow-200">Login</Link>}
                                 </div>
                             )}

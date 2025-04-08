@@ -61,14 +61,14 @@ export default function Home() {
       </motion.p>
 
       {profile && (
-        <div className="flex flex-col items-center gap-4 mt-10">
-          <img
+        <Link href="/info-rank"> <div className="flex flex-col items-center gap-4 mt-10">
+           <img
             src={badgeImage}
             alt="User Rank Badge"
             className="w-60 h-60 object-contain rounded-xl shadow-2xl"
-          />
+          /> 
           <p className="text-2xl font-bold">Points: {point}</p>
-        </div>
+        </div> </Link>
       )}
 
       {!profile && !loading && (
