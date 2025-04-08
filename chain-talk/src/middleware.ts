@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/api/play-game") ||
         request.nextUrl.pathname.startsWith("/api/profile")||
         request.nextUrl.pathname.startsWith("/api/lobby") ||
-        request.nextUrl.pathname.startsWith("/api/create-room") 
+        request.nextUrl.pathname.startsWith("/api/room") 
         ) {
         try {
             if (!auth) {
@@ -49,7 +49,7 @@ export const config = {
     matcher: ["/api/play-game/:path*",
         "/api/profile/:path*",
         "/api/lobby/:path*",
-        "/api/create-room/:path*",
+        "/api/room/:path*",
     ],
 };
  

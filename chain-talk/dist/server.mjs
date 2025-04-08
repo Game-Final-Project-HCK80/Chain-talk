@@ -12,10 +12,23 @@ app.prepare().then(() => {
     const io = new Server(httpServer);
     io.on("connection", (socket) => {
         console.log(`User connected: ${socket.id}`);
-        socket.on("join-room", ({ room, username }) => {
+        socket.on("join-room", async ({ room, player }) => {
             socket.join(room);
-            console.log(`User ${username} joined room ${room}`);
-            socket.to(room).emit("user_joined", `${username} joined room `);
+            console.log(`User ${player.username} joined room ${room}`);
+            const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/join-room", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ room, player }),
+            });
+            const newRoom = await res.json();
+            if (!res.ok) {
+                socket.emit("error", newRoom.message);
+                return;
+            }
+            io.to(room).emit("room-joined", newRoom.room);
+            socket.to(room).emit("user_joined", `${player.username} joined room `);
         });
         socket.on("message", ({ room, message, sender }) => {
             console.log(`Message from ${sender} in room ${room}: ${message}`);
