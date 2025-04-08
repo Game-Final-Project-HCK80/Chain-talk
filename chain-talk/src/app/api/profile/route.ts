@@ -31,7 +31,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const { password, ...userWithoutPassword } = updatedUser;
+    const { ...userWithoutPassword } = updatedUser;
 
     return NextResponse.json(userWithoutPassword); 
   } catch (err) {

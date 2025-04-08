@@ -2,6 +2,7 @@ import { errHandler } from "@/app/helpers/errHandler";
 import { Player, RoomModel } from "@/db/model/roomModel";
 import UserModel from "@/db/model/usermodel";
 import { CustomError } from "@/types";
+import { ObjectId } from "mongodb";
 
 export async function POST(req: Request) {
     try {
@@ -15,19 +16,21 @@ export async function POST(req: Request) {
         const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
         const player: Player = {
-            id: userId,
+            userId: new ObjectId(userId),
             name: user.username,
             score: 0,
             isHost: true,
+            isReady: true
         }
 
         await RoomModel.createRoom({
             codeRoom: code,
-            hostId: userId,
+            hostId: new ObjectId(userId),
             roomUrl: "",
             status: "Waiting",
             players: [player],
             answer: [],
+            messages: [],
         });
 
         return Response.json({ message: "success", codeRoom: code });
@@ -35,7 +38,4 @@ export async function POST(req: Request) {
     } catch (error) {
         return errHandler(error as CustomError)
     }
-
-
-
 }
