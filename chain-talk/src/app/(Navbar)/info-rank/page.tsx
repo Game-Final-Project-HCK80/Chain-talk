@@ -68,7 +68,8 @@ export default function InfoRankPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          Dalam setiap pertandingan, hanya yang terbaik yang layak naik peringkat. Dapatkan <span className="text-yellow-300 font-semibold">+1 poin</span> jika kamu menjadi juara pertama, tapi hati-hati—jika kamu berada di posisi terakhir, <span className="text-red-400 font-semibold">-1 poin</span> akan mengintaimu! Tidak di posisi puncak maupun dasar? Tenang, poinmu aman. Semakin tinggi rank, semakin kuat lawan, dan semakin besar kebanggaan saat kamu berhasil mengalahkannya!
+          Dalam setiap pertandingan, hanya yang terbaik yang layak naik peringkat. Dapatkan <span className="text-yellow-300 font-semibold">+1 poin</span> jika kamu menjadi juara pertama, tapi hati-hati—jika kamu berada di posisi terakhir, <span className="text-red-400 font-semibold">-1 poin</span> akan mengintaimu! Tidak di posisi puncak maupun dasar? Tenang, poinmu aman. Semakin tinggi rank, semakin besar kebanggaan dan prestasi yang kamu raih di setiap permainan!
+
         </motion.p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
