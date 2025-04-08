@@ -19,10 +19,7 @@ export default function Profile() {
     useEffect(() => {
         async function fetchProfile() {
             try {
-                const res = await fetch(`/api/profile`, {
-                    credentials: "include",
-                });
-
+                const res = await fetch(`/api/profile`, { credentials: "include" });
                 if (res.status === 401) {
                     window.location.href = '/login';
                     return;
@@ -54,11 +51,19 @@ export default function Profile() {
         return "/master.png";
     };
 
+    const getBorderColorByPoint = (points: number) => {
+        if (points < 10) return "border-yellow-600";
+        if (points < 20) return "border-gray-300";
+        if (points < 30) return "border-yellow-300";
+        if (points < 40) return "border-blue-400";
+        if (points < 50) return "border-cyan-300";
+        return "border-purple-400";
+    };
+
     const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validate type and size
         if (!file.type.startsWith("image/")) {
             toast.error("Only image files are allowed");
             return;
@@ -86,38 +91,29 @@ export default function Profile() {
         }
 
         setSaving(true);
-
         try {
             const res = await fetch("/api/profile", {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({ username: tempUsername, picture: tempPicture }),
             });
 
             const data = await res.json();
-
             if (!res.ok) {
-                if (data?.message === "Username already exists") {
-                    toast.error("Username is already taken");
-                } else {
-                    toast.error("Failed to save changes");
-                }
+                toast.error(data?.message === "Username already exists" ? "Username is already taken" : "Failed to save changes");
                 return;
             }
 
             setProfile(data);
             setEditMode(false);
             toast.success("Profile updated successfully!");
-        } catch (err) {
+        } catch {
             toast.error("An error occurred while saving");
         } finally {
             setSaving(false);
         }
     };
-
 
     const handleCancel = () => {
         setTempUsername(profile?.username || "");
@@ -126,87 +122,119 @@ export default function Profile() {
     };
 
     const badgeImage = getImageByPoint(point);
+    const nextPoints = 10 - (point % 10);
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-[#6e00b3] via-[#3e0066] to-[#6e00b3] text-white flex flex-col items-center justify-center px-4">
+        <main className="min-h-screen bg-gradient-to-br from-[#6e00b3] via-[#3e0066] to-[#6e00b3] text-white flex items-center justify-center px-4 py-10">
             {!loading && profile && (
-                <div className="w-full max-w-sm bg-purple bg-opacity-40 backdrop-blur-md rounded-2xl p-6 flex flex-col items-center gap-5 shadow-2xl border border-purple-500">
-                    <div className="relative">
-                        <img
-                            src={editMode ? tempPicture : (profile.picture || "/default-avatar.png")}
-                            alt="User Avatar"
-                            className="w-28 h-28 rounded-full border-4 border-yellow-400 shadow-lg object-cover"
-                        />
-                        {editMode && (
+                <div className="w-full max-w-3xl h-[90vh] bg-purple bg-opacity-40 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500 flex flex-col justify-between items-center gap-6">
+                    {/* Title */}
+                    <h2 className="text-3xl font-bold text-center flex items-center justify-center gap-2">
+                        <img src="/crown-icon.png" className="w-7 h-7" alt="Crown" />
+                        Your Profile
+                    </h2>
+
+                    {/* Profile middle content: picture + username + point */}
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+                        {/* Avatar */}
+                        <div className="relative">
+                            <img
+                                src={editMode ? tempPicture : (profile.picture || "/default-avatar.png")}
+                                alt="User Avatar"
+                                className={`w-32 h-32 rounded-full border-4 ${getBorderColorByPoint(point)} shadow-lg object-cover transition hover:scale-105`}
+                            />
+                            {editMode && (
+                                <>
+                                    <button
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="absolute bottom-0 right-0 bg-yellow-400 p-1 rounded-full hover:scale-110 transition"
+                                    >
+                                        <img src="/pencil-icon.png" alt="Edit" className="w-5 h-5" />
+                                    </button>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                        onChange={handlePictureChange}
+                                    />
+                                </>
+                            )}
+                        </div>
+
+                        {/* Username and Points */}
+                        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-4">
+                            {editMode ? (
+                                <input
+                                    type="text"
+                                    value={tempUsername}
+                                    onChange={(e) => setTempUsername(e.target.value)}
+                                    className="w-full max-w-xs p-2 bg-transparent border-b-2 border-yellow-400 text-white text-2xl font-bold placeholder:text-gray-300"
+                                    placeholder="Username"
+                                />
+                            ) : (
+                                <h1 className="text-3xl font-bold text-yellow-300">{profile.username}</h1>
+                            )}
+
+                            <div className="w-full max-w-xs">
+                                <p className="text-lg font-semibold">
+                                    Points: <span className="text-yellow-400">{point}</span>
+                                </p>
+                                <div className="mt-2">
+                                    <div className="w-full bg-gray-700 rounded-full h-2">
+                                        <div
+                                            className="bg-yellow-400 h-2 rounded-full"
+                                            style={{ width: `${Math.min((point % 10) * 10, 100)}%` }}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                        {nextPoints} points to next rank
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* BUTTONS */}
+                    <div className="flex justify-center w-full gap-4 mt-4">
+                        {editMode ? (
                             <>
                                 <button
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="absolute bottom-0 right-0 bg-yellow-400 p-1 rounded-full"
+                                    onClick={handleSave}
+                                    disabled={saving}
+                                    className="bg-yellow-400 text-purple-900 font-bold px-5 py-2 rounded-xl hover:bg-yellow-300 transition"
                                 >
-                                    <img src="/pencil-icon.png" alt="Edit" className="w-5 h-5" />
+                                    {saving ? "Saving..." : "Save"}
                                 </button>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    ref={fileInputRef}
-                                    className="hidden"
-                                    onChange={handlePictureChange}
-                                />
+                                <button
+                                    onClick={handleCancel}
+                                    disabled={saving}
+                                    className="bg-gray-300 text-black font-bold px-5 py-2 rounded-xl hover:bg-gray-200 transition"
+                                >
+                                    Cancel
+                                </button>
                             </>
+                        ) : (
+                            <button
+                                onClick={() => setEditMode(true)}
+                                className="bg-yellow-400 text-purple-900 font-bold px-5 py-2 rounded-xl hover:bg-yellow-300 transition"
+                            >
+                                Edit Profile
+                            </button>
                         )}
                     </div>
 
-                    {editMode ? (
-                        <input
-                            type="text"
-                            value={tempUsername}
-                            onChange={(e) => setTempUsername(e.target.value)}
-                            className="w-full p-2 text-center bg-transparent border-b-2 border-yellow-400 text-white text-xl font-bold placeholder:text-gray-300"
-                            placeholder="Username"
-                        />
-                    ) : (
-                        <h1 className="text-3xl font-bold text-center text-yellow-300">{profile.username}</h1>
-                    )}
-
-                    <Link href="/info-rank">
-                        <div className="relative">
+                    {/* RANK BADGE */}
+                    <div className="flex flex-col items-center gap-2 mt-8">
+                        <Link href="/info-rank">
                             <img
                                 src={badgeImage}
                                 alt="User Rank"
-                                className="w-40 h-40 object-contain"
+                                className="w-40 h-40 object-contain hover:scale-105 transition"
                             />
-                        </div>
-                    </Link>
-
-                    <p className="text-lg font-semibold text-white">
-                        Points: <span className="text-yellow-400">{point}</span>
-                    </p>
-
-                    {editMode ? (
-                        <div className="flex gap-2">
-                            <button
-                                onClick={handleSave}
-                                disabled={saving}
-                                className="bg-yellow-400 text-purple-900 font-bold px-4 py-2 rounded-xl hover:bg-yellow-300 transition"
-                            >
-                                {saving ? "Saving..." : "Save"}
-                            </button>
-                            <button
-                                onClick={handleCancel}
-                                disabled={saving}
-                                className="bg-gray-300 text-black font-bold px-4 py-2 rounded-xl hover:bg-gray-200 transition"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    ) : (
-                        <button
-                            onClick={() => setEditMode(true)}
-                            className="mt-4 bg-yellow-400 text-purple-900 font-bold px-4 py-2 rounded-xl hover:bg-yellow-300 transition"
-                        >
-                            Edit Profile
-                        </button>
-                    )}
+                        </Link>
+                        <p className="text-sm text-gray-300 text-center">Click badge for rank info</p>
+                    </div>
                 </div>
             )}
         </main>
