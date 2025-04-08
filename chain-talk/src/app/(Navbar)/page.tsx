@@ -59,7 +59,7 @@ export default function Home() {
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
-        <source src="/bg-video.mp4" type="video/mp4" />
+        <source src="/bg-vid.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
