@@ -1,0 +1,48 @@
+{
+  "name": "chain-talk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:socket": "tsc --project tsconfig.server.json",
+    "build": "next build",
+    "build:socket": "next build && rmdir /s /q dist && tsc --project tsconfig.server.json",
+    "start": "next start",
+    "start:socket": "cross-env NODE_ENV=production node dist/server.mjs",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@daily-co/daily-js": "^0.77.0",
+    "@daily-co/daily-react": "^0.22.0",
+    "autoprefixer": "^10.4.21",
+    "bcryptjs": "^3.0.2",
+    "daisyui": "^5.0.9",
+    "framer-motion": "^12.6.3",
+    "jose": "^6.0.10",
+    "jotai": "^2.12.2",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.487.0",
+    "mongodb": "^6.15.0",
+    "next": "15.2.4",
+    "postcss": "^8.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4",
+    "tailwindcss": "^4.0.17",
+    "typescript": "^5"
+  }
+}
