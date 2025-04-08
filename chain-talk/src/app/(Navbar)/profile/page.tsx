@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UserType } from "@/types";
+import Link from "next/link";
 
 export default function Profile() {
     const [profile, setProfile] = useState<UserType | null>(null);
@@ -63,14 +64,14 @@ export default function Profile() {
                         {profile.username}
                     </h1>
 
-                    <div className="relative">
+                    <Link href="/info-rank"><div className="relative">
                         <img
                             src={badgeImage}
                             alt="User Rank"
                             className="w-40 h-40 object-contain"
                         />
 
-                    </div>
+                    </div></Link>
 
                     <p className="text-lg font-semibold text-white">
                         Points: <span className="text-yellow-400">{point}</span>
