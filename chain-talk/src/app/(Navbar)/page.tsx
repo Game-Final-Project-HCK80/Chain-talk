@@ -1,15 +1,19 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { UserType } from "@/types";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import { toast } from "react-toastify";
+import { MouseProvider, useMouse } from "@/mousecontex/mousecontext";
+import CustomPointer from "@/components/mouse";
+import { UserType } from "@/types";
+import Profile from "./profile/page";
 
-export default function Home() {
+function HomeContent() {
   const [profile, setProfile] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [point, setPoint] = useState(0);
+  const { position, hovering } = useMouse();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -51,6 +55,10 @@ export default function Home() {
 
   return (
     <main className="relative w-full h-screen overflow-hidden text-white">
+      <div>
+        <p>Mouse Position: {`x: ${position.x}, y: ${position.y}`}</p>
+        <p>Hovering: {hovering ? "Yes" : "No"}</p>
+      </div>
       {/* Video Background */}
       <video
         autoPlay
@@ -123,5 +131,14 @@ export default function Home() {
         </motion.div>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <MouseProvider>
+      <CustomPointer />
+      <HomeContent />
+    </MouseProvider>
   );
 }
