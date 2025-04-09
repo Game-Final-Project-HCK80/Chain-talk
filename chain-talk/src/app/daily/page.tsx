@@ -21,7 +21,7 @@ export default function DailyPage() {
   const createRoom = async () => {
     const codeRoom = "Testing";
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL+"/api/create-vc", {
+      const res = await fetch("/api/create-vc", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

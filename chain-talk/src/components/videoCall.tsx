@@ -26,7 +26,7 @@ export default function VideoCall({ roomUrl }: { roomUrl: string | null }) {
   return (
     <div className="flex flex-col items-center">
       <video ref={videoRef} className="w-full max-w-2xl border rounded-lg" autoPlay playsInline />
-      {call && <CallControls call={call} />}
+      {call && roomUrl && <CallControls call={call} roomUrl={roomUrl} />}
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default function VoiceCall({ roomUrl }: { roomUrl: string | null }) {
   return (
     <div className="flex flex-col items-center">
       <p className="text-lg font-semibold">Voice Call Active</p>
-      {call && <CallControls call={call} />}
+      {call && roomUrl && <CallControls call={call} roomUrl={roomUrl} />}
     </div>
   );
 }

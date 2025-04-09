@@ -5,6 +5,10 @@ export type RoomType = {
 }
 
 export async function POST(req: Request) {
+  console.log(process.env.DAILY_API_KEY);
+  console.log(process.env.MONGO_URI);
+  
+  
   const { codeRoom } = await req.json();
 
   try {

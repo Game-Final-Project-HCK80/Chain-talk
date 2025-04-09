@@ -1,23 +1,40 @@
-"use client"
+"use client";
 
 import { DailyCall } from "@daily-co/daily-js";
 
-export default function CallControls({ call }: { call: DailyCall }) {
-    return (
-      <div className="flex space-x-4 mt-4">
-        <button className="btn btn-error" onClick={() => {
-          call.leave()
+export default function CallControls({
+  call,
+  roomUrl,
+}: {
+  call: DailyCall;
+  roomUrl: string;
+}) {
+  const handleEndCall = async () => {
+    await call.leave();
 
-          console.log(call.participantCounts(), "counttttttttttt");
+    try {
+      await fetch("/api/destroy-vc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomUrl }),
+      });
+      console.log("Room destroyed");
+    } catch (err) {
+      console.error("Failed to destroy room:", err);
+    }
+  };
 
-          // if (call.participantCounts() === null) {
-          //   call.destroy();
-          // }
-        }}>End Call</button>
-        <button className="btn btn-accent" onClick={() => call.setLocalAudio(!call.localAudio())}>
-          Toggle Mute
-        </button>
-      </div>
-    );
-  }
-  
+  return (
+    <div className="flex space-x-4 mt-4">
+      <button className="btn btn-error" onClick={handleEndCall}>
+        End Call
+      </button>
+      <button
+        className="btn btn-accent"
+        onClick={() => call.setLocalAudio(!call.localAudio())}
+      >
+        Toggle Mute
+      </button>
+    </div>
+  );
+}
