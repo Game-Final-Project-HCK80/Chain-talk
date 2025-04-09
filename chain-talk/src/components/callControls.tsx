@@ -5,9 +5,11 @@ import { DailyCall } from "@daily-co/daily-js";
 export default function CallControls({
   call,
   roomUrl,
+  onLeave,
 }: {
   call: DailyCall;
   roomUrl: string;
+  onLeave?: () => Promise<void>;
 }) {
   const handleEndCall = async () => {
     await call.leave();

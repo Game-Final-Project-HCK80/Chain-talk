@@ -9,7 +9,11 @@ export default function VoiceCall({ roomUrl }: { roomUrl: string | null }) {
   useEffect(() => {
     if (!call || !roomUrl) return;
 
-    call.join({ url: roomUrl });
+    call.join({
+      url: roomUrl,
+      audioSource: true, // Aktifkan mikrofon
+      videoSource: false, // Nonaktifkan kamera
+    });
 
     return () => {
       call.leave();

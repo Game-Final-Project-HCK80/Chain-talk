@@ -7,6 +7,10 @@ import { toast } from "react-toastify"
 import { Player, RoomType } from "@/db/model/roomModel"
 import { socket } from "@/lib/socketClient" // <- Make sure this is correctly configured
 import { useRouter } from "next/navigation"
+import { useDaily } from "@daily-co/daily-react"
+import dynamic from "next/dynamic"
+const VideoCall = dynamic(() => import("@/components/videoCall"), { ssr: false })
+
 
 export default function GameRoom({ params }: { params: Promise<{ codeRoom: string }> }) {
   const [room, setRoom] = useState<RoomType | null>(null)
@@ -19,16 +23,43 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
   const [username, setUsername] = useState<string>("Player")
   const [isHost, setIsHost] = useState(false)
   const router = useRouter()
+  const call = useDaily()
+const videoRef = useRef<HTMLVideoElement>(null)
+const [roomUrl, setRoomUrl] = useState<string | null>(null)
 
-  const toggleSidebar = (type: "chat" | "video") => {
-    if (sidebarOpen && activeSidebar === type) {
-      setSidebarOpen(false)
-      setActiveSidebar(null)
-    } else {
-      setSidebarOpen(true)
-      setActiveSidebar(type)
-    }
+const createRoom = async () => {
+  const codeRoom = `Room-${Date.now()}`; // Nama room unik
+  try {
+    const res = await fetch("/api/create-vc", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ codeRoom }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to create room");
+    setRoomUrl(data.roomUrl); // Simpan URL room ke state
+    toast.success("Room created successfully!");
+  } catch (error) {
+    console.error("Failed to create room:", error);
+    toast.error("Failed to create room. Check console for details.");
   }
+};
+
+const toggleSidebar = async (type: "chat" | "video") => {
+  if (type === "video" && !roomUrl) {
+    await createRoom(); // Buat room jika belum ada
+  }
+
+  if (sidebarOpen && activeSidebar === type) {
+    setSidebarOpen(false);
+    setActiveSidebar(null);
+  } else {
+    setSidebarOpen(true);
+    setActiveSidebar(type);
+  }
+};
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
@@ -94,6 +125,27 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
       socket.off("game_started")
     }
   }, [])
+
+  useEffect(() => {
+    if (!call || !roomUrl) return;
+  
+    call.join({
+      url: roomUrl,
+      audioSource: true, // Aktifkan mikrofon
+      videoSource: true, // Aktifkan kamera
+    });
+  
+    call.on("track-started", (event) => {
+      if (event.track.kind === "video" && videoRef.current) {
+        videoRef.current.srcObject = new MediaStream([event.track]);
+      }
+    });
+  
+    return () => {
+      call.leave();
+    };
+  }, [call, roomUrl]);
+  
 
   return (
     <div className="flex flex-col h-screen bg-[#1E004A] overflow-hidden">
@@ -244,17 +296,42 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
                 ) : (
                   <div className="p-4 overflow-y-auto" style={{ maxHeight: "calc(100% - 10%)" }}>
                     {/* Video Call Grid */}
-                    <div className="grid grid-cols-1 gap-3">
-                      {[1, 2, 3, 4].map((id) => (
-                        <div
-                          key={id}
-                          className="aspect-video bg-[#3A0B73] rounded-lg flex items-center justify-center text-white shadow-md"
-                        >
-                          <UserCircle2 size={40} className="text-[#F72585]" />
-                          <span className="ml-2 font-bold">Player {id}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+  {players.map((player) => (
+    <motion.div
+      key={player?.userId.toString()}
+      className={`bg-[#2B0A54] text-white rounded-xl p-4 shadow-[0_4px_20px_rgba(123,31,162,0.25)] flex items-center justify-between
+        ${player.isReady ? "border-l-4 border-[#FFD60A]" : ""}`}
+      whileHover={{ scale: 1.02, boxShadow: "0 8px 25px rgba(247, 37, 133, 0.3)" }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    >
+      <div className="flex items-center">
+        <UserCircle2 size={36} className="mr-3 text-[#F72585]" />
+        <div>
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold">{player.name}</h3>
+            {player.isHost && (
+              <span className="text-xs bg-[#F1C40F] text-[#34495E] px-2 py-1 rounded-full font-bold">Host</span>
+            )}
+          </div>
+          <span className={`text-xs ${player.isReady ? "text-[#FFD60A]" : "text-[#CCCCCC]"}`}>
+            {player.isReady ? "Ready" : "Not Ready"}
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  ))}
+
+  {/* Tampilkan Video Call jika roomUrl tersedia */}
+  {roomUrl && (
+    <motion.div
+      className="aspect-video bg-[#3A0B73] rounded-lg flex items-center justify-center text-white shadow-md"
+      whileHover={{ scale: 1.02, boxShadow: "0 8px 25px rgba(247, 37, 133, 0.3)" }}
+    >
+      <VideoCall roomUrl={roomUrl} />
+    </motion.div>
+  )}
+</div>
                     <div className="mt-4 flex justify-center">
                       <button className="btn bg-gradient-to-r from-[#F72585] to-[#7209B7] text-white border-none shadow-md hover:shadow-[#F72585]/30">
                         End Call
