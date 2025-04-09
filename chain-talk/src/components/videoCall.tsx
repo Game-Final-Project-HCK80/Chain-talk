@@ -1,67 +1,62 @@
 "use client";
-import { useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { useDaily } from "@daily-co/daily-react";
-import CallControls from "./callControls";
 
-export default function VideoCall({ roomUrl }: { roomUrl: string | null }) {
+export default function VideoCall({ roomUrl }: { roomUrl: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const call = useDaily();
-  const router = useRouter();
-
-  const leaveCall = useCallback(async () => {
-    if (!call) return;
-
-    await call.leave();
-
-    try {
-      const response = await fetch("/api/destroy-vc", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomUrl }),
-      });
-
-      if (!response.ok) {
-        const err = await response.json();
-        console.error("Error ending room:", err);
-      }
-    } catch (error) {
-      console.error("Error calling end-room API:", error);
-    }
-
-    router.push("/lobby");
-  }, [call, roomUrl, router]);
 
   useEffect(() => {
-    if (!call || !roomUrl) return;
+    console.log("Room URL:", roomUrl);
+    console.log("Call object:", call);
 
-    call.join({ url: roomUrl });
+    if (!call || !roomUrl) {
+      console.error("Call object or room URL is missing");
+      return;
+    }
 
-    const handleTrackStarted = (event: any) => {
-      if (event.track.kind === "video" && videoRef.current) {
-        videoRef.current.srcObject = new MediaStream([event.track]);
+    call.join({
+      url: roomUrl,
+      audioSource: true, // Aktifkan mikrofon
+      videoSource: true, // Aktifkan kamera
+    }).then(() => {
+      console.log("Successfully joined the room");
+    }).catch((error) => {
+      console.error("Failed to join the room:", error);
+    });
+
+    call.on("joined-meeting", () => {
+      console.log("Successfully joined the meeting");
+    });
+
+    call.on("track-started", (event) => {
+      console.log("Track started:", event);
+      if (event.track.kind === "video") {
+        console.log("Video track detected");
+        if (videoRef.current) {
+          videoRef.current.srcObject = new MediaStream([event.track]);
+          console.log("Video stream set to videoRef:", videoRef.current.srcObject);
+        } else {
+          console.error("videoRef.current is null");
+        }
+      } else {
+        console.log("Non-video track detected:", event.track.kind);
       }
-    };
-
-    const handleLeftMeeting = () => {
-      console.log("Left meeting event received");
-      router.push("/lobby");
-    };
-
-    call.on("track-started", handleTrackStarted);
-    call.on("left-meeting", handleLeftMeeting);
+    });
 
     return () => {
-      call.off("track-started", handleTrackStarted);
-      call.off("left-meeting", handleLeftMeeting);
       call.leave();
     };
-  }, [call, roomUrl, router]);
+  }, [call, roomUrl]);
 
   return (
     <div className="flex flex-col items-center">
-      <video ref={videoRef} className="w-full max-w-2xl border rounded-lg" autoPlay playsInline />
-      {call && roomUrl && <CallControls call={call} roomUrl={roomUrl} onLeave={leaveCall} />}
+      <video ref={videoRef} className="w-full h-full rounded-lg" autoPlay playsInline />
+      {!videoRef.current?.srcObject && (
+        <p className="text-red-500 mt-2">
+          Camera is not active. Please check your settings or refresh the page.
+        </p>
+      )}
     </div>
   );
 }

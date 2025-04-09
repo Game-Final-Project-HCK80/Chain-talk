@@ -127,17 +127,52 @@ const toggleSidebar = async (type: "chat" | "video") => {
   }, [])
 
   useEffect(() => {
-    if (!call || !roomUrl) return;
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        console.log("Camera and microphone access granted");
+      })
+      .catch((error) => {
+        console.error("Camera and microphone access denied:", error);
+        toast.error("Please allow camera and microphone access.");
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log("Room URL:", roomUrl);
+    console.log("Call object:", call);
+  
+    if (!call || !roomUrl) {
+      console.error("Call object or room URL is missing");
+      return;
+    }
   
     call.join({
       url: roomUrl,
-      audioSource: true, // Aktifkan mikrofon
-      videoSource: true, // Aktifkan kamera
+      audioSource: true,
+      videoSource: true,
+    }).then(() => {
+      console.log("Successfully joined the room");
+    }).catch((error) => {
+      console.error("Failed to join the room:", error);
+    });
+  
+    call.on("joined-meeting", () => {
+      console.log("Successfully joined the meeting");
     });
   
     call.on("track-started", (event) => {
-      if (event.track.kind === "video" && videoRef.current) {
-        videoRef.current.srcObject = new MediaStream([event.track]);
+      console.log("Track started:", event);
+      if (event.track.kind === "video") {
+        console.log("Video track detected");
+        if (videoRef.current) {
+          videoRef.current.srcObject = new MediaStream([event.track]);
+          console.log("Video stream set to videoRef:", videoRef.current.srcObject);
+        } else {
+          console.error("videoRef.current is null");
+        }
+      } else {
+        console.log("Non-video track detected:", event.track.kind);
       }
     });
   

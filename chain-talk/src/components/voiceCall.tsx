@@ -12,7 +12,7 @@ export default function VoiceCall({ roomUrl }: { roomUrl: string | null }) {
     call.join({
       url: roomUrl,
       audioSource: true, // Aktifkan mikrofon
-      videoSource: false, // Nonaktifkan kamera
+      videoSource: true, // Nonaktifkan kamera
     });
 
     return () => {
