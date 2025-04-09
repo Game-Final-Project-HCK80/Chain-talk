@@ -1,38 +1,12 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import React from "react";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
+import DailyWrapper from "@/components/DailyWrapper";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Chain-Talk",
-  description: "made in by heart",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <link rel="stylesheet" href="home" />
-        
-        {children}
-        <ToastContainer />
-
+      <body>
+        <DailyWrapper>{children}</DailyWrapper>
       </body>
     </html>
   );
