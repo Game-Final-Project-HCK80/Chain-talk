@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { MouseProvider, useMouse } from "@/mousecontex/mousecontext";
 import CustomPointer from "@/components/mouse";
 import { UserType } from "@/types";
-import Profile from "./profile/page";
 
 function HomeContent() {
   const [profile, setProfile] = useState<UserType | null>(null);
