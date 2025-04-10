@@ -12,7 +12,13 @@ import dynamic from "next/dynamic";
 
 const VideoCall = dynamic(() => import("@/components/videoCall"), { ssr: false });
 
-export default function GameRoom({ params }: { params: { codeRoom: string } }) {
+interface GameRoomProps {
+  params: {
+    codeRoom: string;
+  };
+}
+
+export default function GameRoom({ params }: GameRoomProps) {
   const [room, setRoom] = useState<RoomType | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -53,14 +59,14 @@ export default function GameRoom({ params }: { params: { codeRoom: string } }) {
       toast.error("Room URL is missing. Cannot end the call.");
       return;
     }
-  
+
     try {
       // Tinggalkan panggilan jika sudah bergabung
       if (call) {
         await call.leave();
         console.log("Left the call successfully");
       }
-  
+
       // Hapus room dari Daily.co
       const res = await fetch("/api/destroy-vc", {
         method: "POST",
@@ -69,13 +75,13 @@ export default function GameRoom({ params }: { params: { codeRoom: string } }) {
         },
         body: JSON.stringify({ roomUrl }),
       });
-  
+
       const data = await res.json();
-  
+
       if (!res.ok) {
         throw new Error(data.error || "Failed to destroy the room");
       }
-  
+
       toast.success("Room destroyed successfully!");
       setRoomUrl(null); // Reset roomUrl
       setIsJoined(false); // Reset joined state
@@ -174,46 +180,6 @@ export default function GameRoom({ params }: { params: { codeRoom: string } }) {
         toast.error("Please allow camera and microphone access.");
       });
   }, []);
-
-  useEffect(() => {
-    if (!call || !roomUrl) {
-      console.error("Call object or Room URL is missing");
-      return;
-    }
-  
-    if (isJoined) {
-      console.log("Already joined the meeting");
-      return;
-    }
-  
-    call
-      .join({
-        url: roomUrl,
-        audioSource: true,
-        videoSource: true,
-      })
-      .then(() => {
-        console.log("Successfully joined the room");
-        setIsJoined(true);
-      })
-      .catch((error) => {
-        if (error.name === "NotReadableError") {
-          console.error("Camera or microphone is already in use:", error);
-          toast.error("Camera or microphone is already in use. Please close other applications.");
-        } else {
-          console.error("Failed to join the room:", error);
-        }
-      });
-  
-    return () => {
-      call.leave().then(() => {
-        console.log("Left the meeting on cleanup");
-        setIsJoined(false);
-      }).catch((error) => {
-        console.error("Failed to leave the meeting on cleanup:", error);
-      });
-    };
-  }, [call, roomUrl, isJoined]);
 
   return (
     <div className="flex flex-col h-screen bg-[#1E004A] overflow-hidden">
@@ -404,7 +370,10 @@ export default function GameRoom({ params }: { params: { codeRoom: string } }) {
                       )}
                     </div>
                     <div className="mt-4 flex justify-center">
-                      <button onClick={endCall} className="btn bg-gradient-to-r from-[#F72585] to-[#7209B7] text-white border-none shadow-md hover:shadow-[#F72585]/30">
+                      <button
+                        onClick={endCall}
+                        className="btn bg-gradient-to-r from-[#F72585] to-[#7209B7] text-white border-none shadow-md hover:shadow-[#F72585]/30"
+                      >
                         End Call
                       </button>
                     </div>

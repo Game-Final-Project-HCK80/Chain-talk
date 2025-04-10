@@ -15,18 +15,23 @@ export default function VideoCall({ roomUrl }: { roomUrl: string }) {
       return;
     }
 
-    call
-      .join({
-        url: roomUrl,
-        audioSource: true,
-        videoSource: true,
-      })
-      .then(() => {
-        console.log("Successfully joined the room");
-      })
-      .catch((error) => {
-        console.error("Failed to join the room:", error);
-      });
+    call.leave().then(() => {
+      console.log("Left the previous meeting");
+      call
+        .join({
+          url: roomUrl,
+          audioSource: true,
+          videoSource: true,
+        })
+        .then(() => {
+          console.log("Successfully joined the room");
+        })
+        .catch((error) => {
+          console.error("Failed to join the room:", error);
+        });
+    }).catch((error) => {
+      console.error("Failed to leave the previous meeting:", error);
+    });
 
     call.on("joined-meeting", () => {
       console.log("Successfully joined the meeting");
@@ -45,9 +50,13 @@ export default function VideoCall({ roomUrl }: { roomUrl: string }) {
     });
 
     return () => {
-      call.leave();
+      call.leave().then(() => {
+        console.log("Left the meeting on cleanup");
+      }).catch((error) => {
+        console.error("Failed to leave the meeting on cleanup:", error);
+      });
     };
-  }, [call, roomUrl]);
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
