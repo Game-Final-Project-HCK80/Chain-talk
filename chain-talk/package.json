@@ -9,7 +9,8 @@
     "build:socket": "next build && rmdir /s /q dist && tsc --project tsconfig.server.json",
     "start": "next start",
     "start:socket": "cross-env NODE_ENV=production node dist/server.mjs",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:watch": "concurrently \"next dev --turbo\" \"tsc --project tsconfig.server.json --watch\""
   },
   "dependencies": {
     "@daily-co/daily-js": "^0.77.0",
@@ -39,6 +40,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",

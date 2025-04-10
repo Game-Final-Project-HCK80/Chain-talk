@@ -65,6 +65,25 @@ class UserModel {
     }
 
 
+    static async updatePoint(_id: ObjectId) {
+        const updatedUser = await this.collection().findOneAndUpdate(
+            { _id },
+            {
+                $inc: { point: 1 },
+                $set: {
+                    updatedAt: new Date()
+                }
+            }
+        );
+    
+        if (!updatedUser) {
+            throw { message: "Update fail", status: 404 };
+        }
+    
+        return updatedUser
+    }
+
+
     static async findByEmail(email: string) {
         return this.collection().findOne({ email });
     }

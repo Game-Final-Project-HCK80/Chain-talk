@@ -20,7 +20,8 @@ export async function POST(req: Request) {
             name: user.username,
             score: 0,
             isHost: true,
-            isReady: true
+            isReady: true,
+            isPlayed: false
         }
 
         await RoomModel.createRoom({
@@ -31,6 +32,8 @@ export async function POST(req: Request) {
             players: [player],
             answer: [],
             messages: [],
+            round: 1,
+            startDate: new Date(),
         });
 
         return Response.json({ message: "success", codeRoom: code });

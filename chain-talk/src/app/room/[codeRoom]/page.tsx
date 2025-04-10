@@ -8,7 +8,7 @@ import { Player, RoomType } from "@/db/model/roomModel"
 import { socket } from "@/lib/socketClient" // <- Make sure this is correctly configured
 import { useRouter } from "next/navigation"
 
-export default function GameRoom({ params }: { params: Promise<{ codeRoom: string }> }) {
+export default function RoomPage({ params }: { params: Promise<{ codeRoom: string }> }) {
   const [room, setRoom] = useState<RoomType | null>(null)
   const [players, setPlayers] = useState<Player[]>([])
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -40,6 +40,22 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
     }
   }
 
+  const handleLeaveRoom = async () => {
+    const responseUser = await fetch("/api/profile")
+    if (!responseUser.ok) throw new Error("User not found")
+
+    const userData = await responseUser.json()
+
+    socket.emit("leave-room", { room: room?.codeRoom, player: userData._id })
+
+    socket.on("room-left", (data: RoomType) => {
+      setPlayers(data.players)
+      setRoom(data)
+    })
+    
+    router.push("/")
+  }
+
   // Fetch room data
   async function getRoomByCode() {
     try {
@@ -60,7 +76,7 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
       setIsHost(userData._id === roomData.data.hostId)
       
       // Join the socket room
-      socket.emit("join-room", { room: codeRoom, player: userData });
+      socket.emit("join-room", { room: roomData.data.codeRoom, player: userData });
 
       socket.on("room-joined", (data: RoomType) => {
         setPlayers(data.players)
@@ -72,10 +88,35 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
     }
   }
 
+  async function handleReadyorStartGame() {
+    if (isHost) {
+      socket.emit("start-game", { room: room?.codeRoom })
+
+      socket.on("game-started", (room) => {
+        setRoom(room)
+        router.push("/game/"+room.room.codeRoom)
+      })
+
+    } else {
+      const responseUser = await fetch("/api/profile")
+      if (!responseUser.ok) throw new Error("User not found")
+
+      const userData = await responseUser.json()
+      socket.emit("ready", { room: room?.codeRoom, player: userData._id })
+
+      socket.on("player_ready", (data: {players: RoomType}) => {
+        console.log("Player ready", data);
+        
+        setPlayers(data.players.players)
+        setRoom(data.players)
+      })
+    }
+  }
+
   // Handle socket events
   useEffect(() => {
     getRoomByCode();
-
+    
     socket.on("message", (data: { sender: string; message: string }) => {
       setMessages(prev => [...prev, { id: Date.now(), sender: data.sender, text: data.message }])
     })
@@ -84,10 +125,23 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
       setMessages(prev => [...prev, { id: Date.now(), sender: "System", text: message }])
     })
 
-    socket.on("game_started", () => {
-      router.push("/game")
+    socket.on("room-left", (data: RoomType) => {
+      setPlayers(data.players)
+      setRoom(data)
     })
 
+    socket.on("player_ready", (data: {players: RoomType}) => {
+      console.log("Player ready", data.players);
+      
+      setPlayers(data.players.players)
+      setRoom(data.players)
+    })
+
+    socket.on("game-started", (room) => {
+      setRoom(room)
+      router.push("/game/"+room.room.codeRoom)
+    })
+    
     return () => {
       socket.off("message")
       socket.off("user_joined")
@@ -166,13 +220,17 @@ export default function GameRoom({ params }: { params: Promise<{ codeRoom: strin
                 className="btn border-none shadow-lg hover:shadow-[#F72585]/30 bg-gradient-to-r from-[#7209B7] to-[#560BAD] text-white"
                 whileHover={{ scale: 1.05, boxShadow: "0 8px 25px rgba(247, 37, 133, 0.3)" }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleLeaveRoom}
               >
                 Leave Room
               </motion.button>
+              
               <motion.button
                 className="btn border-none shadow-lg hover:shadow-[#F72585]/30 bg-gradient-to-r from-[#F72585] to-[#7209B7] text-white font-bold"
                 whileHover={{ scale: 1.05, boxShadow: "0 8px 25px rgba(247, 37, 133, 0.3)" }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleReadyorStartGame}
+                disabled={!isHost? false : players.every(player => player.isReady) ? false : true}
               >
                 {isHost ? "Start Game" : "Ready"}
               </motion.button>
