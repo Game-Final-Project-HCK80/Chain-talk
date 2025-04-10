@@ -70,6 +70,7 @@ export default function Navbar() {
                             {navLink('/leaderboard', 'Leaderboard')}
                             {navLink('/lobby', 'Lobby')}
                             {navLink('/info-rank', 'Rank Info')}
+                            {navLink('/create-room', 'Create Room')}
                             {auth
                                 ? <ButtonLogout />
                                 : <Link href="/login" className="hover:text-yellow-300">Login</Link>}
